@@ -1,0 +1,48 @@
+# OS system files
+.DS_Store
+Thumbs.db
+
+# MATLAB files
+*.asv
+*.mex*
+*.mat
+*.fig
+*.log
+*.bak
+*.autosave
+
+# R files
+.Rhistory
+.RData
+.Rproj.user/
+.Rproj
+
+# HPC and temporary files
+*.out
+*.err
+*.job
+*.slurm
+nohup.out
+
+# Intermediate and raw data
+Data/
+Data_OOD/
+eyedata/
+R_DataTable/
+Data_old/
+*.csv
+*.tsv
+*.xlsx
+*.tmp
+
+# Figures and exports
+Figures/
+*.pdf
+*.png
+*.jpg
+*.tif
+*.svg
+
+# Logs
+*.log
+*.bak

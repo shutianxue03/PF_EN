@@ -1,0 +1,1 @@
+function [keyPress, time] = checkButtonPress(respKeys)[~,t,keyCode] = KbCheck;keyPress = [];key = find(keyCode==1);if length(key) == 1	keyPress = find(respKeys==key);    time    = t;endif isempty(keyPress)	keyPress = 0;    time     = [];end	

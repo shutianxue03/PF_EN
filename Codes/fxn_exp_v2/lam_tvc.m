@@ -1,0 +1,15 @@
+function threshold = fxn_LAM(params, nExt)
+%Purpose: Calculate threshold elevation as a function of noise contrast
+%based upon the linear amplifier model. This is based upon the
+%parameterization from Pelli (1981) and operates on threshold contrast
+%energy and noise contrast energy, rather than raw contrast values. That
+%is, raise a contrast threshold or a noise contrast to the power of 2 and
+%then pass that to this function.
+%Inputs:    params: The parameters of the LAM
+%                   params(1): D, the effective signal to noise ratio
+%                   params(2): Neq, the critical spectral density of the
+%                   noise
+%           nExt: The contrast of the external noise (should be squared based on the description above)
+%Output:    threshold: a vector of thresholds
+D = params(1); Neq = params(2); %Assign the parameters to individual variables
+threshold = D .* (nExt + Neq); %Do the LAM calculation
