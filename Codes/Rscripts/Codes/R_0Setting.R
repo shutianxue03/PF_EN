@@ -30,7 +30,7 @@ graphics.off()         # Close all open plots
 cat("\014")            # Clear console
 
 # ==== Performance level to analyze
-PerfLevel_s <- 0.75  
+PerfLevel_s <- 0.75
 
 # ==== 👥 Define Subjects ====
 str_n9 <- ""

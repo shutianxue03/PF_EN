@@ -103,7 +103,7 @@ if (str_SF == "SF6") {
 }
 
 # ==== 📁 Folder Setup ====
-nameFolder_Fig_Variation_3way <- sprintf("%s/3way_interaction", nameFolder_Fig_Variation)
+nameFolder_Fig_Variation_3way <- sprintf("%s/3way_interaction", nameFolder_Figures)
 if (!dir.exists(nameFolder_Fig_Variation_3way)) dir.create(nameFolder_Fig_Variation_3way, recursive = TRUE, showWarnings = FALSE)
 
 nameFolder_Output <- sprintf("%s/Output_2Variation_3Way", nameFolder_Outputs)
