@@ -22,7 +22,7 @@ setwd(nameFolder)
 nBoot <- 1000
 
 # ==== 🛠️ Define SF x Subj configurations ====
-str_SF = "SF46"; flag_n9 = 0
+str_SF <- "SF46"; flag_n9 <- 0
 configs <- list(
   list(str_SF = "SF46", flag_n9 = 0) # Include SF4 (n=9) and SF6 (n=12, 9 shared with SF4)
   # list(str_SF = "SF6",  flag_n9 = 0), # Include SF6 (n=12)
