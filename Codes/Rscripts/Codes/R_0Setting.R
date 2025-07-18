@@ -67,20 +67,24 @@ shape_SF <- c(
   )
 
 # ==== 📁 Folder Paths ====
-# Run the code
-nameFolder_Code <- "Codes/Rscripts/Codes"
 
-# Load data tables from Data/R_DataTable
-nameFolder_Load <- sprintf("Data/R_DataTable/%s%s", str_SF, str_n9)
+# Set the working directory to Rscripts/Codes
+library(here)
+setwd(here("Codes", "Rscripts", "Codes"))
 
-# Save figures to Figures/
-nameFolder_Figures <- sprintf("Figures/acrossSFs/%s%s/R_Figures", str_SF, str_n9)
+# Server path
+nameFolder_server <- '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; 
+
+# Define the directory to load data from (Data/R_DataTable)
+nameFolder_Load <- sprintf("%s/Data/R_DataTable/%s%s", nameFolder_server, str_SF, str_n9)
+
+# Define the directory to save figures
+nameFolder_Figures <- sprintf("%s/Figures/acrossSFs/%s%s/R_Figures", nameFolder_server, str_SF, str_n9)
 if (!dir.exists(nameFolder_Figures)) dir.create(nameFolder_Figures, recursive = TRUE)
 
-# Save outputs to Codes/Rscripts/Outputs/
-nameFolder_Outputs <- sprintf("Codes/Rscripts/Outputs_%s%s", str_SF, str_n9)
+# Define the directory to save outputs
+nameFolder_Outputs <- sprintf("%s/R_outputs/%s%s", nameFolder_server, str_SF, str_n9)
 if (!dir.exists(nameFolder_Outputs)) dir.create(nameFolder_Outputs, recursive = TRUE)
-
 
 # ==== 🔁 Define Pair Mapping for Location Groups ====
 pair_mapping <- list(

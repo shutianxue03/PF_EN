@@ -40,43 +40,43 @@ for (cfg in configs) {configs
   start_time0 <- Sys.time() # ⏱️ tic
   
   # ---- 0. Setting ----
-  source("Rscripts/Codes/R_0Setting.R")
+  source("R_0Setting.R")
   
   # ---- Nested PTM comparison (xx min) ----
   # str_loc_list <- c("FovHM4LVM4UVM4HM8LVM8UVM8") # List of location groups
-  # source(sprintf("%s/R_nestedMC.R", nameFolder_Code))
+  # source("R_nestedMC.R")
   
   # ---- 1. Modulation (2 min) ----
   str_loc_list <- c("FovHM4LVM4UVM4HM8LVM8UVM8") # List of location groups
-  source(sprintf("%s/R_1Modulation_boot.R", nameFolder_Code))
+  source("R_1Modulation_boot.R")
 
   # ---- 2. Variation (24 min) ----
   flag_plot7Locs <- FALSE
   
   # [STATS] Loc x SF
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8", "HM4VM4", "HM8VM8", "LVM4UVM4", "LVM8UVM8", "FovEcc4Ecc8")
-  source(sprintf("%s/R_2Variation_boot_stats.R", nameFolder_Code))
+  source("R_2Variation_boot_stats.R")
   
   # [STATS] Meridian/Loc x Ecc x SF
   str_loc_list <- c("HM4VM4HM8VM8", "LVM4UVM4LVM8UVM8")
-  source(sprintf("%s/R_2Variation_boot_stats_2ECC.R", nameFolder_Code))
+  source("R_2Variation_boot_stats_2ECC.R")
   
   # [PLOT] Across three eccentricities
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8","FovEcc4Ecc8")
-  source(sprintf("%s/R_2Variation_boot_plot.R", nameFolder_Code))
+  source("R_2Variation_boot_plot.R")
   
   # [PLOT] Around polar angle
   str_loc_list <- c("HM4VM4", "HM8VM8", "LVM4UVM4", "LVM8UVM8");
-  source(sprintf("%s/R_2Variation_boot_plot.R", nameFolder_Code))
+  source("R_2Variation_boot_plot.R")
   
   # [PLOT] Meridian/Loc x Ecc x SF
   str_loc_list <- c("HM4VM4HM8VM8", "LVM4UVM4LVM8UVM8")
-  source(sprintf("%s/R_2Variation_boot_plot_2ECC.R", nameFolder_Code))
+  source("R_2Variation_boot_plot_2ECC.R")
   
   # ---- 3. Contribution (16 min) ----
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8", "HM4VM4", "HM8VM8", "LVM4UVM4", "LVM8UVM8", "FovEcc4Ecc8")
-  source(sprintf("%s/R_3Contribution_boot.R", nameFolder_Code))
-  source(sprintf("%s/R_3Contribution_BIN.R", nameFolder_Code))
+  source("R_3Contribution_boot.R")
+  source("R_3Contribution_BIN.R")
   
   # ---- END ----
   end_time0 <- Sys.time() # ⏱️ toc
