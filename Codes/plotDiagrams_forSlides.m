@@ -1,3 +1,34 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% plotDiagrams_forSlides.m
+% Last updated by Shutian Xue on 07/18/2025
+
+% Purpose:
+%   Generates and saves a series of illustrative diagrams for slides and papers, including:
+%     - Blurred images (e.g., NYC with Gaussian blur)
+%     - Psychometric function (PMF) curves with varying thresholds
+%     - Schematic plots for model parameters (e.g., gain, nonlinearity, noise)
+%     - Spatial frequency (SF) diagrams
+%     - Visual performance field (VPF) diagrams for different location groups
+%
+% Usage:
+%   Run as a script. Figures are saved to the specified output directory.
+%
+% Inputs:
+%   - Requires 'NYC.png' in the working directory for blur demonstration
+%
+% Outputs:
+%   - Figures saved in subfolders of 'Figures/PF_diagram' under the server directory
+
+
+clear all, clc, close all
+
+% Define the path to the folder where the figures will be saved
+nameFolder_server = '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; % the server directory of the Data and Figures folders
+
+nameFolder_Figures_diagrams = sprintf('%s/Figures/PF_diagram', nameFolder_server);
+if ~exist(nameFolder_Figures_diagrams, 'dir'), mkdir(nameFolder_Figures_diagrams); end
+
+addpath(genpath('fxn_analysis/')); 
 
 %% Diagram of NYC with different levels of blur
 sd=15;
@@ -17,7 +48,7 @@ for c = 1:3
     img_blur(:,:,c) = conv2(img(:,:,c), filter2d, 'same');
 end
 
-imwrite(img_blur, sprintf('NYC_blurred_sd%d.png', sd));
+imwrite(img_blur, sprintf('%s/NYC_blurred_sd%d.png', nameFolder_Figures_diagrams, sd));
 
 figure('Position', [0 0 2e3 2e3])
 subplot(2,1,1); imshow(img); title('Original');
@@ -71,7 +102,7 @@ yline(y_thresh(1), 'k--', 'linewidth', lw_ref)
 ylim([y_lb, 1])
 axis off
 
-saveas(gcf, 'Figures/PF_diagram/PMF_multipleNadd.jpg')
+saveas(gcf, sprintf('%s/PMF_multipleNadd.jpg', nameFolder_Figures_diagrams))
 
 %% Diagrams of parameters
 close all
@@ -79,19 +110,19 @@ figure('Position', [0 0 300 200]), hold on, axis off,
 x=linspace(-3,3,1e3);
 y=normpdf(x, 0, 1);
 plot(x,y,'k-', 'LineWidth',10)
-saveas(gcf, 'Figures/PF_diagram/Gain.jpg')
+saveas(gcf, sprintf('%s/Gain.jpg', nameFolder_Figures_diagrams)) % save the figure for Gain
 
 figure('Position', [0 0 300 200]), hold on, axis off,
 x=linspace(0,3,1e3);
 y=x.^2;
 plot(x,y,'k-', 'LineWidth',10)
-saveas(gcf, 'Figures/PF_diagram/NonL.jpg')
+saveas(gcf, sprintf('%s/nonL.jpg', nameFolder_Figures_diagrams)) % save the figure for nonL
 
 figure('Position', [0 0 300 200]), hold on, axis off,
 x=linspace(0,2*pi,1e3);
 y=sin(x*5).*normpdf(x, mean(x), 1);
 plot(x,y,'k-', 'LineWidth',10)
-saveas(gcf, 'Figures/PF_diagram/Nadd.jpg')
+saveas(gcf, sprintf('%s/Nadd.jpg', nameFolder_Figures_diagrams)) % save the figure for Nadd
 close all
 
 %% Diagrams of SF
@@ -110,14 +141,14 @@ for SF = [4,6]
         x_diag = diag_all(iDiag);
         plot([-2, 2], [-2, 2]+x_diag, '-k', 'linewidth', 5);
     end
-    saveas(gcf, sprintf('Figures/PF_diagram/SF%d.jpg', SF))
+    saveas(gcf, sprintf('%s/SF%d.jpg', nameFolder_Figures_diagrams, SF))
 end
 
 %% Diagram of VPF
-
-clear all, clc, close all
-
+%------------------%
 SX_analysis_setting
+%------------------%
+
 outline_ecc = [1, 2];
 
 sz_marker_all = [70, 90];
@@ -133,7 +164,7 @@ colors_allLoc = colors_asym([1, 4,4,8,8], :);
 strParts_all = {'full', 'Fov', 'HM4', 'HM8'};
 indParts_all = {1:5, 1, [2,3], [4,5]};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 % EE-VM
@@ -146,7 +177,7 @@ colors_allLoc = colors_asym([1, 5, 5, 9, 9], :);
 strParts_all = {'full', 'Fov', 'VM4', 'VM8'};
 indParts_all = {1:5, 1, [2,3], [4,5]};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 % HVA 4&8
@@ -159,7 +190,7 @@ colors_allLoc = colors_asym([4, 5, 4, 5, 8, 9, 8, 9], :);
 strParts_all = {'full'};
 indParts_all = {1:8};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 % VMA 4&8
@@ -173,7 +204,7 @@ colors_allLoc = colors_asym([7, 6, 11, 10], :);
 strParts_all = {'full'};
 indParts_all = {1:4};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 
@@ -187,7 +218,7 @@ colors_allLoc = colors_asym([4,4,5,5], :);
 strParts_all = {'full', 'HM4', 'VM4'};
 indParts_all = {1:4, [1,2], [3,4]};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 % VMA4
@@ -200,7 +231,7 @@ colors_allLoc = colors_asym([6,7], :);
 strParts_all = {'full', 'LVM4', 'UVM4'};
 indParts_all = {1:2, 1,2};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 % HVA8
@@ -213,7 +244,7 @@ colors_allLoc = colors_asym([8,8,9,9], :);
 strParts_all = {'full', 'HM8', 'VM8'};
 indParts_all = {1:4, [1,2], [3,4]};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
 % VMA8
@@ -226,10 +257,13 @@ colors_allLoc = colors_asym([10,11], :);
 strParts_all = {'full', 'LVM8', 'UVM8'};
 indParts_all = {1:2, 1,2};
 %------------------------------------%
-fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line);
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
-function fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line)
+fprintf('Diagrams for VPF have been generated and saved in \n.  %s\n', nameFolder_Figures_diagrams);
+
+%%
+function fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams)
 nParts = length(indParts_all);
 
 for sz_marker = sz_marker_all
@@ -270,8 +304,10 @@ for sz_marker = sz_marker_all
             plot(x, y, 'o', 'MarkerFaceColor', colors_allLoc_part(iNode, :), 'MarkerEdgeColor', 'w', 'MarkerSize', sz_marker, 'LineWidth', sz_line)
         end
 
-        nameFolder = sprintf('Figures/PF_diagram/Size_%s', str_size);
+        % Define the name of the folder
+        nameFolder = sprintf('%s/Size_%s', nameFolder_Figures_diagrams, str_size);
         if isempty(dir(nameFolder)), mkdir(nameFolder), end
+        % Save the figure
         saveas(gcf, sprintf('%s/%s_%s.jpg', nameFolder, str_locgroup, strParts))
 
     end % iPart
