@@ -40,7 +40,7 @@ for (cfg in configs) {configs
   start_time0 <- Sys.time() # ⏱️ tic
   
   # ---- 0. Setting ----
-  source("Codes/Rscripts/Codes/R_0Setting.R")
+  source("Rscripts/Codes/R_0Setting.R")
   
   # ---- Nested PTM comparison (xx min) ----
   # str_loc_list <- c("FovHM4LVM4UVM4HM8LVM8UVM8") # List of location groups

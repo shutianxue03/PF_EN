@@ -18,9 +18,8 @@ function OOD_boot_withMC(isubj, nNoise, SF, nBoot, flag_estimateThresh, flag_bin
 clc, format compact
 
 % generate paths
-addpath(genpath('Data/Data_OOD/')); % SX
-addpath(genpath('Codes/')); % SX
-
+% addpath(genpath('Data/Data_OOD/')); % SX
+addpath(genpath('fxn_analysis/')); 
 time_start = datetime('now')
 
 % Generate the seed

@@ -1,4 +1,22 @@
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fxn_fitTvCIDVD.m
+% Last updated by Shutian Xue in Mar, 2025
+
+% Purpose:
+%   Fits Threshold vs. Contrast (TvC) data across multiple location groups using either the
+%   Linear Amplifier Model (LAM) or the Perceptual Template Model (PTM). Supports flexible
+%   parameterization and model selection for each group of locations.
+%
+% Usage:
+%   Called as a function or script within the PF_EN analysis pipeline.
+%
+% Inputs (required in workspace or as arguments):
+%   - iTvCModel: Model type (1 = LAM, 2 = PTM)
+%   - params0_LAM, lb_LAM, ub_LAM: Initial values and bounds for LAM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 % Initialization
 indLoc_s_all = {[1,2,3], [1,4,8], [1,5,9], [4,5], [6,7], [8,9], [10,11], [1, 4, 6, 7, 8, 10, 11], [4,5,8,9], [6,7,10,11]}; nIndLoc_s = length(indLoc_s_all); % Total number of location groups
 assert(strcmp(text_locType, 'combLoc'), 'ALERT: text_locType must be "combLoc".');
