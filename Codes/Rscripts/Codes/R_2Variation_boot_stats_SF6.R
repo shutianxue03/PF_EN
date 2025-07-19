@@ -10,7 +10,7 @@ param_list <- c("Gain", "Nadd", "Gamma")
 nameFolder_Output <- sprintf("Output/SimpleANOVA_%s%s", str_SF, str_n9)
 if (!dir.exists(nameFolder_Output)) dir.create(nameFolder_Output, recursive=TRUE)
 
-sink(sprintf("%s/ANOVA_Results_%s%s.txt", nameFolder_Output, str_SF, str_n9))
+sink(sprintf("%s/ANOVA_Results.txt", nameFolder_Output))
 
 # ==== Bootstrapping loop ====
 for (str_loc in str_loc_list) {

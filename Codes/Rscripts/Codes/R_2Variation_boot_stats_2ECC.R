@@ -84,9 +84,9 @@ for (param in param_list) {
   
   # ==== 🔁 Loop Through Print Modes (ANOVA, LMM, Step) ====
   if (flag_plot7Locs == TRUE) {
-    sink(sprintf("%s/ANOVA_%s%s_%s_nBoot%d_7Loc.txt", nameFolder_Output, str_SF, str_n9, param, nBoot))
+    sink(sprintf("%s/ANOVA_%s_nBoot%d_7Loc.txt", nameFolder_Output, param, nBoot))
   } else {
-    sink(sprintf("%s/ANOVA_%s%s_%s_nBoot%d.txt", nameFolder_Output, str_SF, str_n9, param, nBoot))
+    sink(sprintf("%s/ANOVA_%s_nBoot%d.txt", nameFolder_Output, param, nBoot))
   }
 
   # ==== 🔁 Loop Through Location Groups ====
