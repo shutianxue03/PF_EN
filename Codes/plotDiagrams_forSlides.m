@@ -332,6 +332,20 @@ indParts_all = {1:8};
 fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
+% HVA 4&8 (collapsed across eccentricities)
+str_locgroup = 'HVA48_collapsed';
+x_ref = {[-2,2], [0,0]};
+y_ref = {[0,0], [-2,2]};
+x_allLoc = [-1, 0, 1, 0, -2, 0, 2, 0];
+y_allLoc = [0, 1, 0, -1, 0, 2, 0, -2];
+colors_allLoc = colors_asym([4, 5, 4, 5, 4,5,4,5], :);
+strParts_all = {'full', 'HM', 'VM'};
+indParts_all = {1:8, [1,3,5,7], [2,4,6,8]};
+%------------------------------------%
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
+%------------------------------------%
+
+
 % VMA 4&8
 str_locgroup = 'VMA48';
 x_ref = {[0,0]};
@@ -339,13 +353,25 @@ y_ref = {[-2,2]};
 x_allLoc = [0, 0, 0, 0];
 y_allLoc = [1, -1, 2, -2];
 colors_allLoc = colors_asym([7, 6, 11, 10], :);
-% 4:HM4, 7: UVM4, 6: LVM4, 8:HM8, 10: UVM
+%7: UVM4, 6: LVM4, 8:HM8, 10: UVM
 strParts_all = {'full'};
 indParts_all = {1:4};
 %------------------------------------%
 fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
+% VMA 4&8 (collapsed across eccentricities)
+str_locgroup = 'VMA48_collapsed';
+x_ref = {[0,0]};
+y_ref = {[-2,2]};
+x_allLoc = [0, 0, 0, 0];
+y_allLoc = [1, -1, 2, -2];
+colors_allLoc = colors_asym([7, 6, 7, 6], :); % 7: UVM4, 6: LVM4, 
+strParts_all = {'full', 'UVM', 'LVM'};
+indParts_all = {1:4, [1,3], [2,4]};
+%------------------------------------%
+fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
+%------------------------------------%
 
 % HVA4
 str_locgroup = 'HVA4';
@@ -401,55 +427,4 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 fprintf('Diagrams for VPF have been generated and saved in \n.  %s\n', nameFolder_Figures_diagrams);
 
-%%
-function fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams)
-nParts = length(indParts_all);
-
-for sz_marker = sz_marker_all
-
-    if sz_marker == sz_marker_all(1), str_size = 'small'; else, str_size = 'big'; end
-    for iPart = 1:nParts
-        strParts = strParts_all{iPart};
-        indParts = indParts_all{iPart};
-        %%%%%%%%
-        x_allLoc_part = x_allLoc(indParts);
-        y_allLoc_part = y_allLoc(indParts);
-        colors_allLoc_part = colors_allLoc(indParts, :);
-        nNodes = length(x_allLoc_part);
-        nRef = length(x_ref);
-
-        figure('Position', [0 0 500 500], 'Color', 'w'); hold on;
-        axis square, axis off;
-        xlim([-2, 2])
-        ylim([-2, 2])
-
-        % Draw arcs
-        theta = linspace(0, 2*pi, 200);
-        for r = outline_ecc
-            x = r * cos(theta);
-            y = r * sin(theta);
-            plot(x, y, 'k-', 'LineWidth', sz_line);
-        end
-
-        % Draw vertical dashed line
-        for iRef = 1:nRef
-            plot(x_ref{iRef}, y_ref{iRef}, 'k-', 'LineWidth', sz_line);
-        end
-
-        % Draw nodes
-        for iNode = 1:nNodes
-            x = x_allLoc_part(iNode);
-            y = y_allLoc_part(iNode);
-            plot(x, y, 'o', 'MarkerFaceColor', colors_allLoc_part(iNode, :), 'MarkerEdgeColor', 'w', 'MarkerSize', sz_marker, 'LineWidth', sz_line)
-        end
-
-        % Define the name of the folder
-        nameFolder = sprintf('%s/Size_%s', nameFolder_Figures_diagrams, str_size);
-        if isempty(dir(nameFolder)), mkdir(nameFolder), end
-        % Save the figure
-        saveas(gcf, sprintf('%s/%s_%s.jpg', nameFolder, str_locgroup, strParts))
-
-    end % iPart
-    close all
-end
 end
