@@ -24,7 +24,7 @@ clear all, clc, close all
 
 % Define the path to the folder where the figures will be saved
 nameFolder_server = '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; % the server directory of the Data and Figures folders
-
+nameFolder_server = pwd;
 nameFolder_Figures_diagrams = sprintf('%s/Figures/Diagrams', nameFolder_server);
 if ~exist(nameFolder_Figures_diagrams, 'dir'), mkdir(nameFolder_Figures_diagrams); end
 
@@ -54,6 +54,27 @@ figure('Position', [0 0 2e3 2e3])
 subplot(2,1,1); imshow(img); title('Original');
 subplot(2,1,2); imshow(img_blur); title('Gaussian Blurred');
 
+%% Diagrams of parameters
+close all
+figure('Position', [0 0 300 200]), hold on, axis off,
+x=linspace(-3,3,1e3);
+y=normpdf(x, 0, 1);
+plot(x,y,'k-', 'LineWidth',10)
+saveas(gcf, sprintf('%s/Gain.jpg', nameFolder_Figures_diagrams)) % save the figure for Gain
+
+figure('Position', [0 0 300 200]), hold on, axis off,
+x=linspace(0,3,1e3);
+y=x.^2;
+plot(x,y,'k-', 'LineWidth',10)
+saveas(gcf, sprintf('%s/nonL.jpg', nameFolder_Figures_diagrams)) % save the figure for nonL
+
+figure('Position', [0 0 300 200]), hold on, axis off,
+x=linspace(0,2*pi,1e3);
+y=sin(x*5).*normpdf(x, mean(x), 1);
+plot(x,y,'k-', 'LineWidth',10)
+saveas(gcf, sprintf('%s/Nadd.jpg', nameFolder_Figures_diagrams)) % save the figure for Nadd
+close all
+
 %% Diagrams fo PMF
 lw_ref = 1.5;
 y_lb = .45;
@@ -67,7 +88,7 @@ lambda = 0.02;            % Lapse rate
 % Thresholds (alpha values) to simulate
 nThresh = 5;
 thresh_log_all = linspace(-2, -1, nThresh);
-thresh_log_all = [-2.2, -1.8, -1.4, -1.2, -.5];
+thresh_log_all = [-2, -1.8, -1.4, -1., -.5];
 thresh_ln_all = 10.^thresh_log_all;
 colors_grey = linspace(log10(0.5), log10(0.9), nThresh);  % from dark to light
 colors_grey = 10.^colors_grey;
@@ -103,27 +124,6 @@ ylim([y_lb, 1])
 axis off
 
 saveas(gcf, sprintf('%s/PMF_multipleNadd.jpg', nameFolder_Figures_diagrams))
-
-%% Diagrams of parameters
-close all
-figure('Position', [0 0 300 200]), hold on, axis off,
-x=linspace(-3,3,1e3);
-y=normpdf(x, 0, 1);
-plot(x,y,'k-', 'LineWidth',10)
-saveas(gcf, sprintf('%s/Gain.jpg', nameFolder_Figures_diagrams)) % save the figure for Gain
-
-figure('Position', [0 0 300 200]), hold on, axis off,
-x=linspace(0,3,1e3);
-y=x.^2;
-plot(x,y,'k-', 'LineWidth',10)
-saveas(gcf, sprintf('%s/nonL.jpg', nameFolder_Figures_diagrams)) % save the figure for nonL
-
-figure('Position', [0 0 300 200]), hold on, axis off,
-x=linspace(0,2*pi,1e3);
-y=sin(x*5).*normpdf(x, mean(x), 1);
-plot(x,y,'k-', 'LineWidth',10)
-saveas(gcf, sprintf('%s/Nadd.jpg', nameFolder_Figures_diagrams)) % save the figure for Nadd
-close all
 
 %% Diagrams of example TvN curves
 close all; clc;
@@ -427,4 +427,4 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 fprintf('Diagrams for VPF have been generated and saved in \n.  %s\n', nameFolder_Figures_diagrams);
 
-end
+% end
