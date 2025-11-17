@@ -14,7 +14,8 @@
 rm(list = ls())      # Uncomment to clear all variables
 
 # ==== 📁 Set Working Directory ====
-nameFolder <- "/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_INE_2023" # change this to PF_EN later
+# nameFolder <- "/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_INE_2023" # change this to PF_EN later
+nameFolder <- "/Users/xueshutian/Desktop/GitHub_local/PF_EN/Codes/Rscripts/Codes" # change this to PF_EN later
 setwd(nameFolder)
 # nameFolder_Figures <- "/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_INE_2023/Figures/R_Figures"
 
@@ -48,18 +49,18 @@ for (cfg in configs) {configs
   
   # ---- 1. Modulation (2 min) ----
   str_loc_list <- c("FovHM4LVM4UVM4HM8LVM8UVM8") # List of location groups
-  source("R_1Modulation_boot.R")
+  #source("R_1Modulation_boot.R")
 
   # ---- 2. Variation (24 min) ----
   flag_plot7Locs <- FALSE
   
   # [STATS] Loc x SF
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8", "HM4VM4", "HM8VM8", "LVM4UVM4", "LVM8UVM8", "FovEcc4Ecc8")
-  source("R_2Variation_boot_stats.R")
+  #source("R_2Variation_boot_stats.R")
   
   # [STATS] Meridian/Loc x Ecc x SF
   str_loc_list <- c("HM4VM4HM8VM8", "LVM4UVM4LVM8UVM8")
-  source("R_2Variation_boot_stats_2ECC.R")
+  #source("R_2Variation_boot_stats_2ECC.R")
   
   # [PLOT] Across three eccentricities
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8","FovEcc4Ecc8")
@@ -75,8 +76,8 @@ for (cfg in configs) {configs
   
   # ---- 3. Contribution (16 min) ----
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8", "HM4VM4", "HM8VM8", "LVM4UVM4", "LVM8UVM8", "FovEcc4Ecc8")
-  source("R_3Contribution_boot.R")
-  source("R_3Contribution_BIN.R")
+  #source("R_3Contribution_boot.R")
+  #source("R_3Contribution_BIN.R")
   
   # ---- END ----
   end_time0 <- Sys.time() # ⏱️ toc

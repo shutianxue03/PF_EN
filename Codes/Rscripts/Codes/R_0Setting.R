@@ -69,8 +69,8 @@ shape_SF <- c(
 # ==== 📁 Folder Paths ====
 
 # Set the working directory to Rscripts/Codes
-library(here)
-setwd(here("Codes", "Rscripts", "Codes"))
+#library(here)
+#setwd(here("Codes", "Rscripts", "Codes"))
 
 # Server path
 nameFolder_server <- '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; 

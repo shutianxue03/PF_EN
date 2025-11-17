@@ -14,8 +14,10 @@ clear all, close all, clc, format compact, commandwindow; % SX; force the cursor
 addpath(genpath('Data/Data_OOD/')); % SX
 addpath(genpath('Codes/')); % SX
 
+nameFolder_server = '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN';
+
 %% Initiate analysis
-load('Data/Data/params.mat')
+load(sprintf('%s/Data/Data/params.mat', nameFolder_server))
 fit_nBins = 10;%input('         >>> nBins (Number of bins when fitting PMF) = ');
 indLoc_s_all = {[1,2,3], [1,4,8], [1,5,9], [4,5], [6,7], [8,9], [10,11], [1, 4,6,7,   8,10,11], [4,5,8,9], [6,7,10,11]}; nIndLoc_s = length(indLoc_s_all); % Total number of location groups
 
@@ -75,7 +77,7 @@ for nBoot = [1000, 1];
         fprintf('\n    ===============================\n')
 
         % FOLDERS & FILES (group)
-        nameFolder_dataOOD_load = sprintf('Data/Data_OOD/nNoise%d/SF%s', nNoise_save, SF_str);
+        nameFolder_dataOOD_load = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise_save, SF_str);
         if isempty(dir(nameFolder_dataOOD_load)), mkdir(nameFolder_dataOOD_load), end
         nameFile_fitTvC_allSubj = sprintf('%s/n%d_fitTvC_B%d_constim%d_Bin%dFilter%d_%s_%s.mat', ...
             nameFolder_dataOOD_load, nsubj, nBoot, fit.nBins, flag_binData, flag_filterData, text_collapseHM, text_locType);

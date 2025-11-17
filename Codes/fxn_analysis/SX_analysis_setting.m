@@ -1,4 +1,6 @@
 
+nameFolder_server = '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN';
+
 markers_allSubj = {'o', 's', 'd', 'p', 'h', '^', 'v', '<', '>', '+', 'x', '*'};
 gaborCST_ub = 100/100;
 

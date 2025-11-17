@@ -75,7 +75,7 @@ fprintf('\n      Perf levels for thresh est: [%s]\n      Estimate threshold: %d\
 fprintf('\n =========================\n')
 
 %% file name
-nameFolder_dataOOD = sprintf('Data/Data_OOD/nNoise%d/SF%s', nNoise, SF_str);
+nameFolder_dataOOD = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise, SF_str);
 nameFileCCC_OOD = sprintf('%s/ccc/%s_ccc_all.mat', nameFolder_dataOOD, subjName);
 
 if isempty(dir([nameFolder_dataOOD, '/', subjName])), mkdir([nameFolder_dataOOD, '/', subjName]), end
@@ -233,7 +233,7 @@ for iBoot = 1:nBoot
     %-----------------%
     
     %--------------%
-    %     quickPlot_debug % plot PMFs of 9 loc in one panel, per noise level
+        % quickPlot_debug % plot PMFs of 9 loc in one panel, per noise level
     %--------------%
     close all
     %--------------%

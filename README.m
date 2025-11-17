@@ -41,12 +41,15 @@
 % - Submit jobs using shell_all_fitPMF_full on any HPC (originally run on NYU’s Greene HPC cluster)
 % - Alternatively, scripts can be run locally
 
+% To plot PMF for each observer, run OOD_boot_withMC.m
+% To save and plot PMF for a selected observer, see save_PMFstruct.m and plot_PMFstruct.m
+
 %% Compile estimated parameters 
 % SX_compileOOD_V2.m
 
 %% Statistical Analysis in R
 % Location: Codes/Rscripts/Codes
-% - R_runAnalysis.R: master script for statistical modeling
+% Run "R_runAnalysis.R": master script for statistical modeling
 
 % Output:
 % - Fixed/random effect results from LMMs and ANOVAs saved as .txt files in:
@@ -55,5 +58,5 @@
 %     Figures/acrossSFs/SF46/R_Figures/ (folders generated automatically)
 
 %% Contact
-% Shutian Xue (sx2626@nyu.edu)  
+% Shutian Xue (shutian.xue@nyu.edu)  
 % Carrasco Lab, Department of Psychology, New York University

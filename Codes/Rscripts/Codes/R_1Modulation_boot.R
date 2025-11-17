@@ -34,18 +34,17 @@ sf_alpha <- c("4" = 1.0, "5" = 0.7, "6" = 1.0)
 sf_lineStyle <- c("4" = "dashed", "5" = "", "6" = "solid")
 
 # Define figure structure size
-sz_wd <- 7.2 # Default figure width
-sz_ht <- 6 # Default figure height
-sz_label_y <- 20 # main effect | Interaction
-sz_tick_y <- 20
+sz_wd <- 6 # figure width, for manuscript=7.2
+sz_ht <- 7 # figure height, for manuscript=6
+sz_label_y <- 20 # main effect | Interaction; default=20
+sz_tick_y <- 20 # default=20
 sz_label_x <- sz_label_y
-sz_tick_x <- sz_tick_y
-sz_title <- 10
-sz_line <- 1.5
-sz_marker <- 5
-marker_alpha <- .4
-sz_marg <- 15 # the gap between x/y label and ticks
-
+sz_tick_x <- sz_tick_y 
+sz_title <- 10 # default=10
+sz_line <- 1.5  # default=1.5
+sz_marker <- 5 # default=5
+marker_alpha <- .4  # default=.4
+sz_marg <- 15 # the gap between x/y label and ticks;  # default=15
 
 # Create a data frame with all LocComb × SF combinations
 color_df <- expand.grid(
