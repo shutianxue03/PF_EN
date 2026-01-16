@@ -24,7 +24,7 @@ clear all, clc, close all
 
 % Define the path to the folder where the figures will be saved
 nameFolder_server = '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; % the server directory of the Data and Figures folders
-nameFolder_server = pwd;
+% nameFolder_server = pwd;
 nameFolder_Figures_diagrams = sprintf('%s/Figures/Diagrams', nameFolder_server);
 if ~exist(nameFolder_Figures_diagrams, 'dir'), mkdir(nameFolder_Figures_diagrams); end
 
@@ -53,6 +53,73 @@ imwrite(img_blur, sprintf('%s/NYC_blurred_sd%d.png', nameFolder_Figures_diagrams
 figure('Position', [0 0 2e3 2e3])
 subplot(2,1,1); imshow(img); title('Original');
 subplot(2,1,2); imshow(img_blur); title('Gaussian Blurred');
+
+
+%% Foveated image: gradually reduce resolution with eccentricity
+clc; close all;
+
+% ---------- Load image ----------
+img = imread('NYC.png');
+img = im2double(img);             % work in double [0,1]
+[H, W, C] = size(img);
+
+% ---------- Define eccentricity coordinates ----------
+[cx, cy] = deal((W+1)/2, (H+1)/2);       % image center (x=cols, y=rows)
+cy=540;
+[xGrid, yGrid] = meshgrid(1:W, 1:H);
+r = sqrt((xGrid - cx).^2 + (yGrid - cy).^2);  % eccentricity in pixels
+
+maxR = max(r(:));                  % max eccentricity (corner)
+r_norm = r / maxR;                 % normalized [0,1]
+
+% ---------- Define rings and resolution factors ----------
+nRings = 10;                         % number of eccentricity rings
+ringEdges = linspace(0, 1, nRings+1);   % 0–1 in normalized radius
+
+% Downsampling factors (1 = full res at center, larger = coarser outside)
+% e.g., [1, 1.5, 2, 3, 4]
+dsFactors = linspace(1, 10, nRings);
+
+% ---------- Precompute low-res versions ----------
+lowResImgs = cell(nRings, 1);
+for k = 1:nRings
+    f = dsFactors(k);
+    if f <= 1
+        lowResImgs{k} = img;       % no downsampling
+    else
+        % downsample then upsample back to original size
+        img_small = imresize(img, 1/f, 'bilinear');
+        lowResImgs{k} = imresize(img_small, [H, W], 'bilinear');
+    end
+end
+
+% ---------- Construct foveated image ----------
+img_fov = zeros(size(img));
+
+for k = 1:nRings
+    r_min = ringEdges(k);
+    r_max = ringEdges(k+1);
+
+    % Mask for this ring in normalized radius
+    mask = (r_norm >= r_min) & (r_norm < r_max);
+
+    % Apply mask to each channel
+    for c = 1:C
+        layer = img_fov(:,:,c);
+        lr_layer = lowResImgs{k}(:,:,c);
+        layer(mask) = lr_layer(mask);
+        img_fov(:,:,c) = layer;
+    end
+end
+
+
+figure('Position',[100 100 1000 400]); hold on
+imshow(img_fov); hold on
+plot(cx, cy, 'r+', 'MarkerSize', 20, 'LineWidth', 2); 
+
+title('Foveated (resolution decreases with eccentricity)');
+
+imwrite(img_fov, sprintf('%s/NYC_blurredGradient.png', nameFolder_Figures_diagrams));
 
 %% Diagrams of parameters
 close all
@@ -284,17 +351,13 @@ for SF = [4,6]
 end
 
 %% Diagram of VPF
-%------------------%
-SX_analysis_setting
-%------------------%
-
 outline_ecc = [1, 2];
-
 sz_marker_all = [70, 90];
 sz_line = 10;
 
 % EE-HM
 str_locgroup = 'EEHM';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[-2,2]};
 y_ref = {[0,0]};
 x_allLoc = [0, -1, 1, -2, 2];
@@ -308,6 +371,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % EE-VM
 str_locgroup = 'EEVM';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[0,0]};
 y_ref = {[-2,2]};
 x_allLoc = [0,0,0,0,0];
@@ -321,6 +385,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % HVA 4&8
 str_locgroup = 'HVA48';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[-2,2], [0,0]};
 y_ref = {[0,0], [-2,2]};
 x_allLoc = [-1, 0, 1, 0, -2, 0, 2, 0];
@@ -334,6 +399,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % HVA 4&8 (collapsed across eccentricities)
 str_locgroup = 'HVA48_collapsed';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[-2,2], [0,0]};
 y_ref = {[0,0], [-2,2]};
 x_allLoc = [-1, 0, 1, 0, -2, 0, 2, 0];
@@ -345,9 +411,9 @@ indParts_all = {1:8, [1,3,5,7], [2,4,6,8]};
 fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLoc, colors_allLoc, strParts_all, indParts_all, outline_ecc, sz_line, nameFolder_Figures_diagrams);
 %------------------------------------%
 
-
 % VMA 4&8
 str_locgroup = 'VMA48';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[0,0]};
 y_ref = {[-2,2]};
 x_allLoc = [0, 0, 0, 0];
@@ -362,6 +428,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % VMA 4&8 (collapsed across eccentricities)
 str_locgroup = 'VMA48_collapsed';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[0,0]};
 y_ref = {[-2,2]};
 x_allLoc = [0, 0, 0, 0];
@@ -375,6 +442,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % HVA4
 str_locgroup = 'HVA4';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[-1,1], [0,0]};
 y_ref = {[0,0], [-1,1]};
 x_allLoc = [-1, 1, 0,0];
@@ -388,6 +456,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % VMA4
 str_locgroup = 'VMA4';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[0,0]};
 y_ref = {[-1,1]};
 x_allLoc = [0,0];
@@ -401,6 +470,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % HVA8
 str_locgroup = 'HVA8';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[-2,2], [0,0]};
 y_ref = {[0,0], [-2,2]};
 x_allLoc = [-2,2, 0,0];
@@ -414,6 +484,7 @@ fxn_plotPF_diagram(str_locgroup, sz_marker_all,  x_ref, y_ref, x_allLoc, y_allLo
 
 % VMA8
 str_locgroup = 'VMA8';
+fprintf('\n%s...\n', str_locgroup)
 x_ref = {[0,0]};
 y_ref = {[-2,2]};
 x_allLoc = [0,0];

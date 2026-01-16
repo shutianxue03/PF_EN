@@ -35,7 +35,7 @@ for sz_marker = sz_marker_all
         nNodes = length(x_allLoc_part);
         nRef = length(x_ref);
 
-        figure('Position', [0 0 500 500], 'Color', 'w'); hold on;
+        figure('Position', [1e3 0 500 500], 'Color', 'w'); hold on;
         axis square, axis off;
         xlim([-2, 2])
         ylim([-2, 2])

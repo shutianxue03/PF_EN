@@ -39,7 +39,7 @@ SX_fitTvC_setting
 % need to load this for each SF because noiseSD_full differs for each SF
 %----------------%
 
-nameFolder_dataOOD_save = sprintf('Data/Data_OOD/nNoise%d/SF%s', nNoise, SF_str);
+nameFolder_dataOOD_save = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise, SF_str);
 
 if flag_nestedMC, nameFile_nestedMC_allSubj = sprintf('%s/n%d_nestedMC_B%d_constim%d_Bin%dFilter%d_%s_%s.mat', ...
         nameFolder_dataOOD_save, nsubj, nBoot, fit.nBins, flag_binData, flag_filterData, text_collapseHM, text_locType); end

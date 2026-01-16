@@ -4,9 +4,6 @@
 % Last updated by Shutian Xue in May, 2025
 
 
-
-
-
 clear all, close all, clc, format compact, commandwindow; % SX; force the cursor to go automatically to command window
 % set(0, 'DefaultFigureWindowStyle', 'docked')
 
@@ -35,7 +32,7 @@ for nBoot = [1000, 1];
     % str_SF =  'SF6';  SF_load_all = [6]; flag_n9 = 0; nsubj_acrossSF = 12;  namesSF = {'SF6'}; markers_acrossSF = {'hexagram'};% 1=only include the 9 subjects shared between SF4 and SF6
 
     %--- Manual Settings ---------
-    flag_plotGroupTvC = 0; % Plot group TvC curves
+    flag_plotGroupTvC = 1; % Plot group TvC curves
     flag_plotIdvdTvC = 0; % Plot individual TvC curves
     flag_plotCorrAsym = 0; % Plot correlation between asymmetries
     iControl_all = [1,0]; % 0= raw data; 1=demean across SFs to reveal subj effect

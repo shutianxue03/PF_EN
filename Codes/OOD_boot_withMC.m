@@ -270,6 +270,7 @@ for iBoot = 1:nBoot
     end
 end % iBoot
 
+
 %% Visualize nested MC
 % [dBIC_nestedMC_allLoc_med] = getCI(dBIC_nestedMC_allLoc_allB, 1, 3);
 % [R2_nestedMC_allLoc_med] = getCI(R2_nestedMC_allLoc_allB, 1, 3);

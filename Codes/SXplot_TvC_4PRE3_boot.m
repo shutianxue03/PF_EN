@@ -62,8 +62,8 @@ for SF_load = SF_load_all
 end % SF
 
 %% PLOTTING
-iiLoc_all = [1,3];
-iiLoc_all = 1:nLoc_s;
+iiLoc_all = [1];
+% iiLoc_all = 1:nLoc_s;
 
 for SF_load = SF_load_all
     figure('Position', [0, 0, 1.2e3, 1e3]); hold on;
