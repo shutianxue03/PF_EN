@@ -177,7 +177,7 @@ for iModel = 1:nModels
             warning off
             options = optimoptions('fmincon', 'MaxIterations', 5000, 'Display', 'off');
             nrep = 20;
-            if iModel==1 % Logitic function
+            if iModel==1 % Logistic function
                 fxn_getnLL = @(params) -sum(corr_full .* log(fit.PF(params, cst_log_full)) + ...
                     (1 - corr_full) .* log(1 - fit.PF(params, cst_log_full)));
             else % Other models

@@ -64,6 +64,7 @@ for (cfg in configs) {configs
   
   # [PLOT] Across three eccentricities
   str_loc_list <- c("FovHM4HM8", "FovVM4VM8","FovEcc4Ecc8")
+  str_loc_list <- c("FovHM4HM8", "FovVM4VM8")
   source("R_2Variation_boot_plot.R")
   
   # [PLOT] Around polar angle

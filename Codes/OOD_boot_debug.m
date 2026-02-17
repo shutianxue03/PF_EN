@@ -34,7 +34,7 @@ fit.flag_binData = flag_binData;
 fit.flag_filterData = flag_filterData;
 str_PMF_fittingMethod = 'fmincon';
 str_weightType = 'LLPMF';
-    PMFmodel_decide = 4; 
+PMFmodel_decide = 4;
 
 switch SF
     case 6
@@ -116,7 +116,7 @@ for iBoot = 1:nBoot
 
     parfor iLocNoise = iLocNoise_all % more interested in L6-9
         %     for iLocNoise=1
-        
+
         %%% decide noise index %%%
         iNoise = ind_LocNoise(2, iLocNoise);
 
@@ -165,7 +165,7 @@ for iBoot = 1:nBoot
         else
             %------------------------------------------------%
             ccc_full(ccc_full(:, 3) > gaborCST_ub, :)=[];
-            
+
             %             [cst_log_unik, nCorr, nData, pC, estP_allB, LL_allB, R2_weighted_allB] = OOD_fitPMF(flag_estimateThresh, ccc_full, fit);
             % [cst_log_unik, nCorr, nData, pC, estP_allM, LL_allM, R2_weighted_allM] = OOD_fitPMF_v2(ccc_full, fit);
             [cst_log_unik, nCorr, nData, pC, estP_allM, LL_allM, R2_weighted_allM] = OOD_fitPMF_debug(ccc_full, fit, str_PMF_fittingMethod);
@@ -225,7 +225,7 @@ for iBoot = 1:nBoot
     %-----------------%
     SX_fitTvC_setting
     %-----------------%
-    
+
     %--------------%
     %        quickPlot_debug
     %--------------%
@@ -243,7 +243,7 @@ for iBoot = 1:nBoot
     est_BestSimplest_allLoc_allB(:, :, :, iBoot) = est_BestSimplest_allLoc; % from fxn_fitTvCIDVD
 
     if any(SF == [4,6])
-    noiseSD_full = noiseSD_full*2; % will be deleted soon!!
+        noiseSD_full = noiseSD_full*2; % will be deleted soon!!
     end
 
     % figure, histogram(R2_BestSimplest_allLoc(:))
@@ -256,7 +256,7 @@ end % iBoot
 %     namesCombLoc_s = namesCombLoc(indLoc_s); % Get location names
 %     str_LocSelected = strjoin(namesCombLoc_s, ''); % Concatenate location names into a single string
 %     % fprintf('\n-------%s------\n', str_LocSelected) % Print the selected location name
-% 
+%
 %     figure('Position', [0 0 1e3 800]), hold on,
 %     legends_all = cell(1,nLoc_s);
 %     for iiLoc = 1:nLoc_s
@@ -265,12 +265,12 @@ end % iBoot
 %         [thresh_med, thresh_lb, thresh_ub] = getCI(thresh_log_allLoc_allB(indLoc_s(iiLoc), :, iPerf_plot, :), 1, 4); % thresh_log_allB_allSubj: nsubj x nLocComb_max(11) x nNoise x nPerf x nBoot
 %         estP_med = getCI(est_BestSimplest_allLoc_allB(iiIndLoc_s, iiLoc, :, :), 1, 4); % est_xx_allB_allSubj: nsubj x nLocGroups x nLoc_max x nParams x nBoot
 %         [R2_med, R2_lb, R2_ub] = getCI(R2_BestSimplest_allLoc_allB(iiIndLoc_s, iiLoc, iPerf_plot, :), 1, 4);
-% 
+%
 %         % Make predictions
 %         %------------------------------------------------------------------------------------------%
 %         threshEnergy_pred = fxn_PTM([0,1,1,1], estP_med, noiseEnergy_intp_true, dprimes(iPerf_plot), SF_fit);
 %         %------------------------------------------------------------------------------------------%
-%         % errorbars 
+%         % errorbars
 %         errorbar(noiseSD_log_all, thresh_med, thresh_med-thresh_lb, thresh_ub-thresh_med, '.', 'color', color_, 'HandleVisibility', 'off', 'CapSize', 0)
 %         % median thresh
 %         plot(noiseSD_log_all, thresh_med, 'o', 'color', color_, 'HandleVisibility', 'off')
@@ -278,17 +278,17 @@ end % iBoot
 %         plot(noiseSD_intp_log_true, log10(sqrt(threshEnergy_pred)), '-', 'color', color_)
 %         % legend
 %         legends_all{iiLoc} = sprintf('%s: R2=%.2f [%.2f, %.2f]', namesCombLoc{indLoc_s(iiLoc)}, R2_med, R2_lb, R2_ub);
-% 
+%
 %     end % iiLoc
 %     xlabel('External noise SD');
 %     if max(noiseSD_full)>.44, noiseSD_full = noiseSD_full/2; end
 %     x_ticks = noiseSD_log_all; x_ticklabels = round(noiseSD_full, 3);
 %     % x_ticks = [noiseSD_log_all(1), noiseSD_log_full_acrossSF(2:end)]; x_ticklabels = round(noiseSD_full_acrossSF, 3); % defined in fxn_loadSF
 %     xlim([x_ticks(1) - 0.1, x_ticks(end) + 0.1]); xticks(x_ticks); xticklabels(x_ticklabels); xtickangle(90)
-% 
+%
 %     ylabel('Contrast threshold (%)');
 %     yticks(cst_log_ticks); yticklabels(round(cst_ln_ticks)); ylim(cst_log_ticks([1, end]));
-% 
+%
 %     title(sprintf('[%s SF%d] nBoot=%d', subjName, SF, nBoot))
 %     legend(legends_all, 'Location', 'southeast')
 %     set(findall(gcf, '-property', 'linewidth'), 'linewidth',1.5)

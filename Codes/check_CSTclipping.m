@@ -1,80 +1,129 @@
-% Parameters
-nStimuli = 1e3;
-ppd=32;
-stimSize = 96;  % assuming square stimuli
-nFramesStim = 1; % you can extend to multiple frames if needed
-bgColor = 255/2;
-gaborSD = 1*ppd;        % standard deviation of Gaussian envelope
-SF_pix = 2/ppd;    % spatial frequency (cycles/pixel)
-oristimOri = 45;        % orientation in degrees
+%% Check whether external noise RMS causes 8-bit clipping (keep original variable names)
+clc; close all;
 
-iplot = 1;
-figure('Position', [0,0,2e3,2e3])
-noiseSD_all = [0, .005, .02, .1, 0.44];
-gaborCST_all =  [.1, .9, 1, 1.5, 2, 3];
-pClippedLow_med_all = [];
+% Parameters (keep original names)
+nStimuli   = 1e3;   % number of simulated stimuli/frames per condition
+ppd        = 32;
+stimSize   = 96;    % assuming square stimuli
+nFramesStim = 1;    % extend if needed
+bgColor    = 255/2;
+
+gaborSD    = 1*ppd;       % SD of Gaussian envelope (pix)
+SF_pix     = 2/ppd;       % spatial frequency (cycles/pixel)
+oristimOri = 45;          % orientation in degrees
+
+% Conditions
+noiseSD_all   = [0, .005, .02, .1, .44];   % NOTE: interpreted as RMS contrast (sigma_ext)
+gaborCST_all  = linspace(0,1,5);           % scaling factor for signal contrast
+
+% Output containers (keep original names)
+pClippedLow_med_all  = [];
 pClippedHigh_med_all = pClippedLow_med_all;
 
-for noiseSD = noiseSD_all    % SD of Gaussian noise (scales the randn distribution)
-    for gaborCST = gaborCST_all  % this is scaling factor to test (>1 will cause clipping)
+% New: effective displayed RMS (noise-only and noise+signal) after clipping
+effNoiseRMS_med_all = [];     % only filled for noiseSD==.44 to match your original final plot intent
+effStimRMS_med_all  = [];
 
-        % Preallocate
-        pClippedLow_all = nan(nStimuli, 1);
+rng(0); % reproducibility
+
+% Plot setup
+iplot = 1;
+figure('Position',[0,0,1600,1200]);
+
+for noiseSD = noiseSD_all
+    for gaborCST = gaborCST_all
+
+        % Preallocate (keep original names)
+        pClippedLow_all  = nan(nStimuli, 1);
         pClippedHigh_all = pClippedLow_all;
 
-        % Loop through simulated stimuli
+        % New: store effective RMS for each simulated stimulus/frame
+        effNoiseRMS_all = nan(nStimuli,1);  % noise-only
+        effStimRMS_all  = nan(nStimuli,1);  % noise+signal
+
+        % Convert RMS contrast (sigma_ext) to pixel SD
+        % If your manuscript defines sigma_ext differently, edit this ONE line.
+        noiseSD_pix = noiseSD * bgColor;
+
         for i = 1:nStimuli
-            % Create Gabor
-            gaborPhase = 2*pi*rand; % random phase per stimulus
-            contrast = 2 * bgColor * gaborCST;
-            gabor = CreateGabor(stimSize, gaborSD, oristimOri, SF_pix, gaborPhase, contrast);
 
-            % Create Gaussian noise
-            noiseImg = randn(stimSize, stimSize, nFramesStim) * noiseSD * bgColor;
+            % --- Signal (Gabor) ---
+            gaborPhase = 2*pi*rand;  % random phase per stimulus
+            contrast   = 2 * bgColor * gaborCST;
+            gabor      = CreateGabor(stimSize, gaborSD, oristimOri, SF_pix, gaborPhase, contrast);
 
-            % Combine signal and noise
+            % --- External noise (Gaussian) ---
+            noiseImg = randn(stimSize, stimSize, nFramesStim) * noiseSD_pix;
+
+            % --- Noise-only stimulus (for effective RMS after clipping) ---
+            rawNoise = noiseImg + bgColor;
+            clippedNoise = min(max(rawNoise, 0), 255);
+            effNoiseRMS_all(i) = std(clippedNoise(:) - bgColor) / bgColor;
+
+            % --- Signal + noise ---
             noiseImg_ = noiseImg + gabor;
-            rawStim = noiseImg_ + bgColor;  % raw pixel values before normalization
+            rawStim   = noiseImg_ + bgColor;  % raw pixel values before clipping
 
-            % Count clipped pixels
-            pClippedLow = mean(rawStim(:) < 0);
-            pClippedHigh = mean(rawStim(:) > 255);
-            pClippedLow_all(i) = pClippedLow;
-            pClippedHigh_all(i) = pClippedHigh;
+            % Count clipped pixels (keep original logic)
+            pClippedLow_all(i)  = mean(rawStim(:) < 0);
+            pClippedHigh_all(i) = mean(rawStim(:) > 255);
 
+            % Effective RMS after clipping (signal+noise)
+            clippedStim = min(max(rawStim, 0), 255);
+            effStimRMS_all(i) = std(clippedStim(:) - bgColor) / bgColor;
         end
 
-        % Plot histogram before clipping
-        if length(gaborCST_all)<5
-            subplot(length(noiseSD_all), length(gaborCST_all), iplot), hold on
-            histogram(pClippedLow_all, 'Normalization', 'Probability');
-            histogram(pClippedHigh_all, 'Normalization', 'Probability');
+        % Optional diagnostic plots (kept structure, slightly cleaned)
+        if numel(gaborCST_all) < 5
+            subplot(numel(noiseSD_all), numel(gaborCST_all), iplot); hold on;
+            histogram(pClippedLow_all,  'Normalization','Probability');
+            histogram(pClippedHigh_all, 'Normalization','Probability');
 
             if iplot==1
-                xlabel('Proportion of pixel being clipped');
+                xlabel('Proportion of pixels clipped');
                 ylabel('Probability');
             end
-            legend({...
-                sprintf('<0 (med=%.2f)', median(pClippedLow_all)), ...
-                sprintf('>1 (med=%.2f)', median(pClippedHigh_all))}),
-            iplot = iplot+1;
-            title(sprintf('Gabor CST=%.2f, Noise SD=%.2f', gaborCST, noiseSD));
+            legend({ ...
+                sprintf('<0 (med=%.3f)', median(pClippedLow_all)), ...
+                sprintf('>255 (med=%.3f)', median(pClippedHigh_all))}, ...
+                'Location','best');
+            title(sprintf('Gabor CST=%.2f, \\sigma_{ext}=%.3f', gaborCST, noiseSD));
+            iplot = iplot + 1;
         end
 
-        if noiseSD==.44
-            pClippedLow_med_all = [pClippedLow_med_all, median(pClippedLow_all)];
+        % Match your original behavior: only summarize for noiseSD==.44
+        if abs(noiseSD - 0.44) < 1e-12
+            pClippedLow_med_all  = [pClippedLow_med_all,  median(pClippedLow_all)];
             pClippedHigh_med_all = [pClippedHigh_med_all, median(pClippedHigh_all)];
+
+            % New: effective displayed RMS medians
+            effNoiseRMS_med_all = [effNoiseRMS_med_all, median(effNoiseRMS_all)];
+            effStimRMS_med_all  = [effStimRMS_med_all,  median(effStimRMS_all)];
         end
+
     end % gaborCST
 end % noiseSD
-sgtitle('Distribution of Clipped Pixels');
 
-%% pClipped as a fxn of gaborCST (noiseSD=.44)
-figure, hold on, grid on
-plot(gaborCST_all, pClippedLow_med_all+pClippedHigh_med_all, 'k-')
-xlabel('Gabor CST')
-ylabel('Proportion of clipped pixels (total)')
-set(findall(gcf, '-property', 'fontsize'), 'fontsize',15)
+sgtitle('Distribution of clipped pixels (8-bit), across \\sigma_{ext} and signal contrast');
+
+%% pClipped as a function of gaborCST (noiseSD=.44)  (your original final plot)
+figure; hold on; grid on;
+plot(gaborCST_all, pClippedLow_med_all + pClippedHigh_med_all, 'k-o', 'LineWidth', 1.5);
+xlabel('Gabor CST');
+ylabel('Proportion of clipped pixels (total)');
+set(findall(gcf, '-property', 'fontsize'), 'fontsize', 15);
+title('Total clipping at \\sigma_{ext}=0.44');
+
+%% New: show whether clipping reduces the effective displayed RMS (the reviewer’s key concern)
+figure; hold on; grid on;
+plot(gaborCST_all, effNoiseRMS_med_all, 'o-', 'LineWidth', 1.5);   % noise-only effective RMS
+plot(gaborCST_all, effStimRMS_med_all,  's-', 'LineWidth', 1.5);   % signal+noise effective RMS
+yline(0.44, '--'); % intended RMS contrast
+xlabel('Gabor CST');
+ylabel('Effective RMS contrast after 8-bit clipping');
+legend({'Noise-only','Signal+noise','Intended \\sigma_{ext}=0.44'}, 'Location','best');
+set(findall(gcf, '-property', 'fontsize'), 'fontsize', 15);
+title('Does 8-bit clipping reduce effective \\sigma_{ext}?');
 
 %% check the used gabor CST > 1
 clc

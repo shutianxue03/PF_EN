@@ -46,18 +46,25 @@ sz_ht <- 5 # for figure repository
 pos_dodge <- position_dodge(width = wd_dodge)
 jitter_width <- .05
 
-sz_label_y <- c(25, 25) # main effect | Interaction
-sz_tick_y <- c(20,20)
+
+# ==== 🔧 Global styling knobs ====
+FIG_TEXT_SCALE <- 1.4   # enlarge all text
+FIG_LINE_SCALE <- 1.4   # thicken all lines/strokes
+
+sz_label_y <- c(25, 25) * FIG_TEXT_SCALE
+sz_tick_y  <- c(20, 20) * FIG_TEXT_SCALE
 sz_label_x <- c(10,10) # minimized, as ticks/labels will be replaced by diagrams
 sz_tick_x <- c(10,10) # minimized, as ticks/labels will be replaced by diagrams
 sz_legend <- c(10,10) # minimized, as ticks/labels will be replaced by diagrams
 sz_legend_title <- c(10,10) # minimized, as ticks/labels will be replaced by diagrams
 sz_title <- c(10,10) # minimized, will be hidden
-sz_line <- c(1.5, 1.5)
-sz_marker <-c(6,6)
+
+sz_line   <- c(1.5, 1.5) * FIG_LINE_SCALE
+sz_marker <- c(6, 6)     * FIG_LINE_SCALE   # optional: often scale markers too
 sz_marg <- 15 # the gap between x/y label and ticks
 # scale_MainEff <- .7 # everything is scaled down by this factor for main effects
 marker_alpha <- .5
+LW_ANNOT <- 0.6 * FIG_LINE_SCALE
 
 layout_df <- list(
   "01Fov" = c(3, 1),

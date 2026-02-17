@@ -73,7 +73,7 @@ shape_SF <- c(
 #setwd(here("Codes", "Rscripts", "Codes"))
 
 # Server path
-nameFolder_server <- '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; 
+nameFolder_server <- '/Volumes/server/Users/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; 
 
 # Define the directory to load data from (Data/R_DataTable)
 nameFolder_Load <- sprintf("%s/Data/R_DataTable/%s%s", nameFolder_server, str_SF, str_n9)
