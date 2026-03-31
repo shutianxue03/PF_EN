@@ -14,8 +14,10 @@
 rm(list = ls())      # Uncomment to clear all variables
 
 # ==== 📁 Set Working Directory ====
-# nameFolder <- "/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_INE_2023" # change this to PF_EN later
-nameFolder <- "/Users/xueshutian/Desktop/GitHub_local/PF_EN/Codes/Rscripts/Codes" # change this to PF_EN later
+# Lab iMac (mclab03m.psych)
+nameFolder <- "/Users/sx712/Desktop/GitHub_local/PF_EN/Codes/Rscripts/Codes" # change this to PF_EN later
+# My MacBook
+# nameFolder <- "/Users/shutianxue/Desktop/GitHub_local/PF_EN/Codes/Rscripts/Codes" # change this to PF_EN later
 setwd(nameFolder)
 # nameFolder_Figures <- "/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_INE_2023/Figures/R_Figures"
 

@@ -12,11 +12,12 @@ clear; close all; clc;
 %% ---- User settings ----
 
 % Name of the data file
-dataFile = 'PMF_DT_SF4_Fovea.mat'; % change if needed
+dataFile = 'PMF_n12META_SF6_Fovea.mat'; % change if needed
 
 % Which noise levels to plot (indices into pmf.noiseSD)
 % Example: plot 5 out of 9 noise levels
 indNoise_toPlot = [1, 2, 7:9];
+indNoise_toPlot  = 1:9;
 
 % Marker base size (will be scaled by # of trials)
 sz_markerBase = 30;

@@ -1,5 +1,4 @@
-
-nameFolder_server = '/Volumes/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN';
+nameFolder_server = '/Volumes/server/Users/purplab/EXPERIMENTS/1_Current_Experiments/Shutian_server/PF_EN'; str_envir = 'Server';
 
 markers_allSubj = {'o', 's', 'd', 'p', 'h', '^', 'v', '<', '>', '+', 'x', '*'};
 gaborCST_ub = 100/100;

@@ -23,9 +23,9 @@ cat("\014") # Clear console (like MATLAB's clc)
 param_list <- c("Gain", "ThreshN0_t", "GainLog", "Nadd", "Gamma") # Parameters to test
 
 sz_wd_3way <- 6
-sz_ht_3way <- 4
+sz_ht_3way <- 3.5 # originally 4
 sz_wd_2way <- 3
-sz_ht_2way <- 4
+sz_ht_2way <- 3.5 # originally 4
 
 sz_marker <- 4
 wd_line <- 1.5

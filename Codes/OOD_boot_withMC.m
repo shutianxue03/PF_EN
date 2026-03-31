@@ -63,24 +63,121 @@ switch SF
 end
 
 nsubj = length(subjList);
-subjName = subjList{isubj};
+% subjName = subjList{isubj};
 nLoc = nLocSingle + nLocHM;
 
+% ------------------------------
+% Decide whether to run one subject or a meta-observer
+% ------------------------------
+if ischar(isubj) || isstring(isubj)
+    if strcmpi(string(isubj), "all")
+        subjInd = 1:nsubj;
+    else
+        error('Unrecognized isubj string. Use a scalar index, a vector of indices, or ''all''.');
+    end
+elseif isnumeric(isubj)
+    subjInd = isubj(:)';
+    assert(all(subjInd >= 1 & subjInd <= nsubj), 'isubj contains invalid subject index.');
+else
+    error('isubj must be a numeric index/vector or the string ''all''.');
+end
+
+isMetaObserver = numel(subjInd) > 1;
+
+if isMetaObserver
+    subjLabelShort = sprintf('n%dMETA', numel(subjInd));
+    subjName = subjLabelShort;
+else
+    subjName = subjList{subjInd};
+    subjLabelShort = subjName;
+end
+
 %% print info
+% fprintf('\n =========================\n')
+% fprintf('S%d/%d %s [SF = %d]\n      nBoot = %d; nBoot for PMF = %d\n      nNoise = %d x nLoc = %d (single) + %d (collapsed)', ...
+%     isubj, nsubj, subjName, SF, nBoot, fit.nBoot_PMF, nNoise, nLocSingle, nLocHM)
+% fprintf('\n      Perf levels for thresh est: [%s]\n      Estimate threshold: %d\n      Bin data = %d (nBins=%d), Filter data = %d\n      PMF fitting method: %s', ...
+%     num2str(perfThresh_all), flag_estimateThresh, flag_binData, fit.nBins, flag_filterData, str_PMF_fittingMethod)
+% fprintf('\n =========================\n')
+
 fprintf('\n =========================\n')
-fprintf('S%d/%d %s [SF = %d]\n      nBoot = %d; nBoot for PMF = %d\n      nNoise = %d x nLoc = %d (single) + %d (collapsed)', ...
-    isubj, nsubj, subjName, SF, nBoot, fit.nBoot_PMF, nNoise, nLocSingle, nLocHM)
+if isMetaObserver
+    fprintf('Meta-observer from %d subjects: %s [SF = %d]\n      nBoot = %d; nBoot for PMF = %d\n      nNoise = %d x nLoc = %d (single) + %d (collapsed)', ...
+        numel(subjInd), strjoin(subjList(subjInd), ', '), SF, nBoot, fit.nBoot_PMF, nNoise, nLocSingle, nLocHM)
+else
+    fprintf('S%d/%d %s [SF = %d]\n      nBoot = %d; nBoot for PMF = %d\n      nNoise = %d x nLoc = %d (single) + %d (collapsed)', ...
+        subjInd, nsubj, subjName, SF, nBoot, fit.nBoot_PMF, nNoise, nLocSingle, nLocHM)
+end
 fprintf('\n      Perf levels for thresh est: [%s]\n      Estimate threshold: %d\n      Bin data = %d (nBins=%d), Filter data = %d\n      PMF fitting method: %s', ...
     num2str(perfThresh_all), flag_estimateThresh, flag_binData, fit.nBins, flag_filterData, str_PMF_fittingMethod)
 fprintf('\n =========================\n')
 
-%% file name
-nameFolder_dataOOD = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise, SF_str);
-nameFileCCC_OOD = sprintf('%s/ccc/%s_ccc_all.mat', nameFolder_dataOOD, subjName);
+% %% file name
+% nameFolder_dataOOD = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise, SF_str);
+% nameFileCCC_OOD = sprintf('%s/ccc/%s_ccc_all.mat', nameFolder_dataOOD, subjName);
+% 
+% if isempty(dir([nameFolder_dataOOD, '/', subjName])), mkdir([nameFolder_dataOOD, '/', subjName]), end
+% nameFile_fitPMF = sprintf('%s/%s/%s_fitPMF_B%d_constim%d_Bin%dFilter%d.mat', ...
+%     nameFolder_dataOOD, subjName, subjName, nBoot, fit.nBins, flag_binData, flag_filterData);
+% 
+% 
+% nameFolder_dataOOD = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise, SF_str);
+% 
+% % Output folder/name
+% if isempty(dir([nameFolder_dataOOD, '/', subjLabelShort]))
+%     mkdir([nameFolder_dataOOD, '/', subjLabelShort]);
+% end
+% 
+% nameFile_fitPMF = sprintf('%s/%s/%s_fitPMF_B%d_constim%d_Bin%dFilter%d.mat', ...
+%     nameFolder_dataOOD, subjLabelShort, subjLabelShort, nBoot, fit.nBins, flag_binData, flag_filterData);
+% 
+% 
+% %% load and concatenate ccc data
+% ccc = [];
+% 
+% for ii = 1:numel(subjInd)
+%     thisSubj = subjList{subjInd(ii)};
+%     nameFileCCC_OOD = sprintf('%s/ccc/%s_ccc_all.mat', nameFolder_dataOOD, thisSubj);
+% 
+%     S = load(nameFileCCC_OOD, 'ccc_all');
+%     ccc_this = S.ccc_all;
+% 
+%     % Optional: add a subject-ID column for traceability
+%     % ccc_this(:, 6) = subjInd(ii);
+% 
+%     ccc = [ccc; ccc_this];
+% end
+% 
+% assert(~isempty(ccc), 'No ccc data were loaded.');
 
-if isempty(dir([nameFolder_dataOOD, '/', subjName])), mkdir([nameFolder_dataOOD, '/', subjName]), end
+nameFolder_dataOOD = sprintf('%s/Data/Data_OOD/nNoise%d/SF%s', nameFolder_server, nNoise, SF_str);
+
+% Output folder/name
+if isempty(dir([nameFolder_dataOOD, '/', subjLabelShort]))
+    mkdir([nameFolder_dataOOD, '/', subjLabelShort]);
+end
+
 nameFile_fitPMF = sprintf('%s/%s/%s_fitPMF_B%d_constim%d_Bin%dFilter%d.mat', ...
-    nameFolder_dataOOD, subjName, subjName, nBoot, fit.nBins, flag_binData, flag_filterData);
+    nameFolder_dataOOD, subjLabelShort, subjLabelShort, nBoot, fit.nBins, flag_binData, flag_filterData);
+
+%% load and concatenate ccc data
+ccc = [];
+
+for ii = 1:9%numel(subjInd)
+    thisSubj = subjList{subjInd(ii)};
+    nameFileCCC_OOD = sprintf('%s/ccc/%s_ccc_all.mat', nameFolder_dataOOD, thisSubj);
+
+    S = load(nameFileCCC_OOD, 'ccc_all');
+    ccc_this = S.ccc_all;
+
+    % Optional: add a subject-ID column for traceability
+    % ccc_this(:, 6) = subjInd(ii);
+
+    ccc = [ccc; ccc_this];
+end
+
+assert(~isempty(ccc), 'No ccc data were loaded.');
+
 
 %% load ccc data
 load(nameFileCCC_OOD, 'ccc_all');
@@ -171,13 +268,14 @@ for iBoot = 1:nBoot
             %------------------------------------------------%
             ccc_full(ccc_full(:, 3) > gaborCST_ub, :)=[];
             
-            %             [cst_log_unik, nCorr, nData, pC, estP_allB, LL_allB, R2_weighted_allB] = OOD_fitPMF(flag_estimateThresh, ccc_full, fit);
-            % [cst_log_unik, nCorr, nData, pC, estP_allM, LL_allM, R2_weighted_allM] = OOD_fitPMF_v2(ccc_full, fit);
-            [cst_log_unik, nCorr, nData, pC, estP_allM, LL_allM, R2_weighted_allM] = OOD_fitPMF_debug(ccc_full, fit, str_PMF_fittingMethod, sprintf('%s%d', subjName, SF), [iLoc,iNoise]);
-            %             [cst_log_unik, nCorr, nData, pC, estP_allB, LL_allB, R2_weighted_allB] = OOD_fitPMF_v3(flag_estimateThresh, ccc_full, fit);
-            %             LL_allM = median(LL_allB, 1); estP_allM = squeeze(median(estP_allB, 1)); R2_weighted_allM = median(R2_weighted_allB, 1);
+            % [cst_log_unik, nCorr, nData, pC, estP_allM, LL_allM, R2_weighted_allM] = OOD_fitPMF_debug(ccc_full, fit, str_PMF_fittingMethod, sprintf('%s%d', subjName, SF), [iLoc,iNoise]);
             %------------------------------------------------%
-            assert(any(cst_log_unik<=gaborCST_ub))
+            % assert(any(cst_log_unik<=gaborCST_ub))
+
+            datasetTag = sprintf('%s_SF%d', subjLabelShort, SF);
+
+[cst_log_unik, nCorr, nData, pC, estP_allM, LL_allM, R2_weighted_allM] = ...
+    OOD_fitPMF_debug(ccc_full, fit, str_PMF_fittingMethod, datasetTag, [iLoc, iNoise]);
             
             %             figure , hold on
             %             pC_pred = PAL_Weibull(estP_allM(4, :), fit.curveX_ln);
@@ -200,7 +298,7 @@ for iBoot = 1:nBoot
     end % parfor iLocNoise = 1:nLoc*nNoise
     
     % Save outputs
-    % % save(nameFile_fitPMF,'*_allLocN')
+    % save(nameFile_fitPMF,'*_allLocN')
     
     %% The minimum amount of setting needed for running TvC fitting for each idvd
     % Copied from initAnalysis (so that the noiseSD_full is not overridden)
@@ -208,7 +306,7 @@ for iBoot = 1:nBoot
     flag_combineEcc4 = 0;
     ind_LocNoise9 = combvec(1:9, 1:nNoise); % do not delete
     ind_LocNoise9_inUse = combvec(1:(9+2), 1:nNoise); % do not delete
-    
+
     % Below are all needed by "fxn_prepAnalysis"
     flag_locType = 2; % 2=text_locType is 'combLoc';
     SF_fit = 1;
@@ -221,7 +319,7 @@ for iBoot = 1:nBoot
     flag_weightedFitting = 1; % weight the loss (currently, by number of trials per noise level)
     iWeibull = 4; % Decide which model to use:'Logistic', 'CumNorm', 'Gumbel',  'Weibull'
     iBeta = 2; % alpha, beta, gamma, lambda
-    
+
     %---------------%
     fxn_prepAnalysis_debug
     %---------------%
@@ -231,7 +329,7 @@ for iBoot = 1:nBoot
     %-----------------%
     SX_fitTvC_setting
     %-----------------%
-    
+
     %--------------%
         % quickPlot_debug % plot PMFs of 9 loc in one panel, per noise level
     %--------------%
@@ -240,24 +338,24 @@ for iBoot = 1:nBoot
     flag_plot = 0;
     fxn_fitTvCIDVD
     %--------------%
-    
+
     % save for each bootstrap iteration
     LL_PMF_allLoc_allB(:, :, iBoot) = LL_allB(:, :, PMFmodel_decide);
     thresh_log_allLoc_allB(:, :, :, iBoot) = thresh_log; % from fxn_prepAnalysis_v2
     nData_allLoc_allB(:, :, iBoot) = nData_perLoc;     % from fxn_prepAnalysis_v2
     R2_BestSimplest_allLoc_allB(:, :, :, iBoot) = R2_BestSimplest_allLoc; % from fxn_fitTvCIDVD
     est_BestSimplest_allLoc_allB(:, :, :, iBoot) = est_BestSimplest_allLoc; % from fxn_fitTvCIDVD
-    
+
     if any(SF == [4,6])
         noiseSD_full = noiseSD_full*2; % will be deleted soon!!
     end
-    
+
     % figure, histogram(R2_BestSimplest_allLoc(:))
-    
+
     %% Run Model comparison
     if nBoot < 100 % MC takes too much time
         nParams_full = 4;% including Nmul
-        
+
         %------------------------%
         fxn_nestedMC_PTM
         %------------------------%
@@ -265,18 +363,18 @@ for iBoot = 1:nBoot
         dBIC_nestedMC_allLoc = BIC_nestedMC_allLoc - min(BIC_nestedMC_allLoc, [], 2);
         dBIC_nestedMC_allLoc_allB(:, :, iBoot) = dBIC_nestedMC_allLoc;
         R2_nestedMC_allLoc_allB(:, :, iBoot) = R2_nestedMC_allLoc;
-        
+
         figure, bar(R2_nestedMC_allLoc')
     end
 end % iBoot
 
 
 %% Visualize nested MC
-% [dBIC_nestedMC_allLoc_med] = getCI(dBIC_nestedMC_allLoc_allB, 1, 3);
-% [R2_nestedMC_allLoc_med] = getCI(R2_nestedMC_allLoc_allB, 1, 3);
-% figure,
-% subplot(1,2,1), bar(dBIC_nestedMC_allLoc_med'), title('Delta BIC')
-% subplot(1,2,2), bar(R2_nestedMC_allLoc_med'), title('R2')
+[dBIC_nestedMC_allLoc_med] = getCI(dBIC_nestedMC_allLoc_allB, 1, 3);
+[R2_nestedMC_allLoc_med] = getCI(R2_nestedMC_allLoc_allB, 1, 3);
+figure,
+subplot(1,2,1), bar(dBIC_nestedMC_allLoc_med'), title('Delta BIC')
+subplot(1,2,2), bar(R2_nestedMC_allLoc_med'), title('R2')
 
 %% Save outputs of all bootstraps
 nameFile_fitTvC = sprintf('%s/%s/%s_fitTvC_B%d_constim%d_Bin%dFilter%d_%s.mat', ...

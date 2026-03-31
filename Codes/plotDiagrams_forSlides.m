@@ -31,6 +31,7 @@ if ~exist(nameFolder_Figures_diagrams, 'dir'), mkdir(nameFolder_Figures_diagrams
 addpath(genpath('fxn_analysis/')); 
 
 %% Diagram of NYC with different levels of blur
+nameFolder_Figures_diagrams = pwd;
 sd=15;
 
 img = imread('NYC.png');

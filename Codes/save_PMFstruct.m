@@ -17,7 +17,7 @@
 % - Set a breakpoint at: quickPlot_debug (or just before it).
 %
 % 3) Run OOD_boot_withMC with the following inputs:
-% isubj = <index of chosen subject> % see subject list in OOD_boot_withMC
+% isubj = 8; % see subject list in OOD_boot_withMC
 % nNoise = 9;
 % SF = 4;
 % nBoot = 1;
@@ -25,7 +25,7 @@
 % flag_binData = 1;
 % flag_filterData = 1;
 %
-% - Let the code run until it hits the breakpoint.
+% - Let the code run until it hits the breakpoint. DON'T QUIT!!
 % - At that point, the following variables must exist in the workspace:
 % subjName, SF, noiseSD_full, nNoise
 % cst_log_unik_all, nCorr_all, nData_all
@@ -47,11 +47,11 @@
 pmf = struct();
 
 % Meta info
-pmf.subjName = subjName; % e.g. 'SX'
-pmf.SF = SF; % e.g. 4
+pmf.subjName = subjName;
+pmf.SF = SF;
 pmf.iLoc = 1; % Fovea
 pmf.locationName = 'Fovea'; % hard-code or set appropriately
-pmf.noiseSD = noiseSD_full(:)'; % row vector of noise SDs
+pmf.noiseSD = noiseSD_full(:)';
 
 % Performance levels used in fitting (e.g., 65/70/75%)
 pmf.perfLevels = perfThresh_all(:)'/100; % convert to proportion (0–1)
@@ -66,20 +66,20 @@ pmf.yFit = nan(nNoise, numel(pmf.curveX_log));
 pmf.threshLog = nan(1, nNoise);
 
 for iNoise = 1:nNoise
- % Raw data
- d = struct();
- d.logContrast = cst_log_unik_all{pmf.iLoc, iNoise}; % log10 contrast values
- d.nCorr = nCorr_all{pmf.iLoc, iNoise}; % # correct
- d.nTotal = nData_all{pmf.iLoc, iNoise}; % # total
+    % Raw data
+    d = struct();
+    d.logContrast = cst_log_unik_all{pmf.iLoc, iNoise}; % log10 contrast values
+    d.nCorr = nCorr_all{pmf.iLoc, iNoise}; % # correct
+    d.nTotal = nData_all{pmf.iLoc, iNoise}; % # total
 
- pmf.raw{iNoise} = d;
+    pmf.raw{iNoise} = d;
 
- % Fitted curve for this noise level
- pmf.yFit(iNoise, :) = yfit_all{pmf.iLoc, iNoise}(iModel, :);
+    % Fitted curve for this noise level
+    pmf.yFit(iNoise, :) = yfit_all{pmf.iLoc, iNoise}(iModel, :);
 
- % Threshold (log10 contrast) at chosen perf level
- pmf.threshLog(iNoise) = ...
- thresh_log_allSingle{pmf.iLoc, iNoise}(iModel, iPerf_plot);
+    % Threshold (log10 contrast) at chosen perf level
+    pmf.threshLog(iNoise) = ...
+        thresh_log_allSingle{pmf.iLoc, iNoise}(iModel, iPerf_plot);
 end
 
 % Save to a small, shareable .mat file

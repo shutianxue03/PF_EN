@@ -41,8 +41,8 @@ if (str_SF == "SF6") {
 x_buffer <- .5 # the buffer on the x
 wd_dodge <- .4 # width of the dodge
 
-sz_wd <- 7
-sz_ht <- 5 # for figure repository
+sz_wd <- 6 # originally 7
+sz_ht <- 3.5 # originally 5
 pos_dodge <- position_dodge(width = wd_dodge)
 jitter_width <- .05
 
