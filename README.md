@@ -37,6 +37,8 @@ PF_EN/
 
 This repository contains the analysis code. The compressed anonymized data files needed to regenerate the manuscript figures and statistics are deposited in Zenodo: <https://doi.org/10.5281/zenodo.17674399>.
 
+For raw data, please contact Shutian Xue (shutian.xue@nyu.edu).
+
 The three deposited `.mat` files that are directly needed for the figure and statistics pipeline are:
 
 - `params.mat`
